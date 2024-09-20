@@ -5,7 +5,6 @@ import java.util.List;
 
 
 public class ReporteDesempenio {
-
     private int idReporte;
     private Empleado empleado;
     private Departamento departamento;
