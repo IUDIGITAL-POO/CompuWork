@@ -1,15 +1,18 @@
 package IUDIGITAL;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 public class Main {
 
-    private static List<Usuario> usuarios = new ArrayList<>();
-    private static List<String> empleados = new ArrayList<>();
-    private static List<String> departamentos = new ArrayList<>();
-    private static List<String> metricas = new ArrayList<>();
-    // Scanner como atributo privado para que se pueda aceder en toda la app
+    private static List<Usuario> usuarios = new ArrayList<Usuario>();
+    private static List<Empleado> empleados = new ArrayList<Empleado>();
+    private static List<Departamento> departamentos = new ArrayList<Departamento>();
+    private static List<ReporteDesempenio> reportes = new ArrayList<ReporteDesempenio>();
     private static final Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -34,8 +37,6 @@ public class Main {
         scanner.close();
     }
 
-
-    // Metodo para mostrar el menu principal
     private static void mostrarMenuPrincipal(){
         System.out.println("\n--- Menú Principal ---");
         System.out.println("1. Registrar Usuario");
@@ -57,21 +58,18 @@ public class Main {
         int rolOpcion = scanner.nextInt();
         scanner.nextLine();
 
-        // Se puede usar un operador ternario para simplificar la asignación de la variable rol en base a la opción seleccionada por el usuario
-        String rol = (rolOpcion == 1) ? "Administrador" : "Empleado";
-        if(rolOpcion != 1 && rolOpcion != 2){
+        if (rolOpcion != 1 && rolOpcion != 2) {
             System.out.println("Opción de rol inválida, registro fallido.");
             return;
         }
 
+        String rol = (rolOpcion == 1) ? "Administrador" : "Empleado";
 
         Usuario nuevoUsuario = new Usuario(nombreUsuario, contrasena, rol);
         usuarios.add(nuevoUsuario);
         System.out.println("Usuario registrado exitosamente.");
     }
 
-
-    // separe el metodo iniciarSesion en dos metodos para mejorar la legibilidad del codigo
     private static void iniciarSesion() {
         System.out.print("Ingrese nombre de usuario: ");
         String nombreUsuario = scanner.nextLine();
@@ -97,14 +95,13 @@ public class Main {
         return null;
     }
 
-        private static void mostrarMenuPorRol(String rol) {
+    private static void mostrarMenuPorRol(String rol) {
         if (rol.equals("Administrador")) {
             mostrarMenuAdministrador();
         } else if (rol.equals("Empleado")) {
             mostrarMenuEmpleado();
         }
     }
-
 
     private static void mostrarMenuAdministrador() {
         boolean salir = false;
@@ -120,10 +117,10 @@ public class Main {
             int opcion = scanner.nextInt();
             scanner.nextLine();
 
-            switch (opcion){
+            switch (opcion) {
                 case 1 -> gestionarEmpleados();
                 case 2 -> gestionarDepartamentos();
-                case 3 -> gestionarMetricas();
+                case 3 -> gestionarReportes();
                 case 4 -> generarInformes();
                 case 5 -> {
                     salir = true;
@@ -131,11 +128,10 @@ public class Main {
                 }
                 default -> System.out.println("Opción inválida, intente nuevamente.");
             }
-
         }
     }
 
-    private static void gestionarEmpleados(){
+    private static void gestionarEmpleados() {
         System.out.println("\n--- Gestionar Empleados ---");
         System.out.println("1. Registrar Empleado");
         System.out.println("2. Actualizar Empleado");
@@ -145,10 +141,10 @@ public class Main {
         int opcion = scanner.nextInt();
         scanner.nextLine();
 
-        switch (opcion){
+        switch (opcion) {
             case 1 -> registrarEmpleado();
             case 2 -> actualizarEmpleado();
-//            case 3 -> eliminarEmpleado();
+            case 3 -> System.out.println("Funcionalidad de eliminación no implementada.");
             case 4 -> System.out.println("Volviendo al menú principal...");
             default -> System.out.println("Opción inválida, intente nuevamente.");
         }
@@ -166,10 +162,11 @@ public class Main {
             case 1 -> registrarDepartamento();
             case 2 -> actualizarDepartamento();
             case 3 -> System.out.println("Volviendo al menú anterior...");
+            default -> System.out.println("Opción inválida, intente nuevamente.");
         }
     }
 
-    private static void gestionarMetricas() {
+    private static void gestionarReportes() {
         System.out.println("\n--- Gestión de Métricas ---");
         System.out.println("1. Registrar Métrica");
         System.out.println("2. Actualizar Métrica");
@@ -178,9 +175,10 @@ public class Main {
         int opcion = scanner.nextInt();
         scanner.nextLine();
         switch (opcion) {
-            case 1 -> registrarMetrica();
-            case 2 -> actualizarMetrica();
+            case 1 -> registrarReporte();
+            case 2 -> actualizarReporte();
             case 3 -> System.out.println("Volviendo al menú anterior...");
+            default -> System.out.println("Opción inválida, intente nuevamente.");
         }
     }
 
@@ -196,24 +194,66 @@ public class Main {
             case 1 -> generarInformeDepartamental();
             case 2 -> generarInformeIndividual();
             case 3 -> System.out.println("Volviendo al menú anterior...");
+            default -> System.out.println("Opción inválida, intente nuevamente.");
         }
     }
 
-
     private static void registrarEmpleado() {
         System.out.print("Ingrese el nombre del empleado: ");
-        String empleado = scanner.nextLine();
-        empleados.add(empleado);
-        System.out.println("Empleado registrado exitosamente.");
+        String nombre = scanner.nextLine();
+        System.out.print("Ingrese el ID del empleado: ");
+        int id = scanner.nextInt();
+        scanner.nextLine();
+        System.out.print("Ingrese el tipo de empleado: ");
+        String tipoEmpleado = scanner.nextLine();
+        System.out.print("Ingrese el salario del empleado: ");
+        double salario = scanner.nextDouble();
+        scanner.nextLine();
+        System.out.println("Seleccione un departamento para el empleado:");
+        for (int i = 0; i < departamentos.size(); i++) {
+            System.out.println((i + 1) + ". " + departamentos.get(i).getNombre());
+        }
+        int opcionDepartamento;
+        do {
+            System.out.print("Ingrese el número del departamento: ");
+            opcionDepartamento = scanner.nextInt();
+        } while (opcionDepartamento < 1 || opcionDepartamento > departamentos.size());
+        Departamento departamentoSeleccionado = departamentos.get(opcionDepartamento - 1);
+        Empleado nuevoEmpleado = new Empleado(nombre, id, tipoEmpleado, salario);
+        nuevoEmpleado.asignarDepartamento(departamentoSeleccionado);
+        empleados.add(nuevoEmpleado);
+        System.out.println("Empleado registrado exitosamente en el departamento: " + departamentoSeleccionado.getNombre());
     }
 
     private static void actualizarEmpleado() {
-        System.out.print("Ingrese el nombre del empleado a actualizar: ");
-        String empleado = scanner.nextLine();
-        if (empleados.contains(empleado)) {
-            System.out.print("Ingrese el nuevo nombre del empleado: ");
+        System.out.print("Ingrese el ID del empleado a actualizar: ");
+        int idEmpleado = scanner.nextInt();
+        scanner.nextLine();
+        Empleado empleadoAActualizar = null;
+        for (Empleado emp : empleados) {
+            if (emp.getId() == idEmpleado) {
+                empleadoAActualizar = emp;
+                break;
+            }
+        }
+        if (empleadoAActualizar != null) {
+            System.out.println("Empleado encontrado: " + empleadoAActualizar.getNombre());
+            System.out.print("Ingrese el nuevo nombre (dejar vacío para mantener el nombre actual): ");
             String nuevoNombre = scanner.nextLine();
-            empleados.set(empleados.indexOf(empleado), nuevoNombre);
+            if (!nuevoNombre.isEmpty()) {
+                empleadoAActualizar.setNombre(nuevoNombre);
+            }
+            System.out.print("Ingrese el nuevo tipo de empleado (dejar vacío para mantener el actual): ");
+            String nuevoTipoEmpleado = scanner.nextLine();
+            if (!nuevoTipoEmpleado.isEmpty()) {
+                empleadoAActualizar.setTipoEmpleado(nuevoTipoEmpleado);
+            }
+            System.out.print("Ingrese el nuevo salario (dejar vacío para mantener el actual): ");
+            String nuevoSalarioStr = scanner.nextLine();
+            if (!nuevoSalarioStr.isEmpty()) {
+                double nuevoSalario = Double.parseDouble(nuevoSalarioStr);
+                empleadoAActualizar.setSalario(nuevoSalario);
+            }
             System.out.println("Empleado actualizado exitosamente.");
         } else {
             System.out.println("Empleado no encontrado.");
@@ -221,59 +261,139 @@ public class Main {
     }
 
     private static void registrarDepartamento() {
+        System.out.print("Ingrese el código del departamento: ");
+        int codigo = scanner.nextInt();
+        scanner.nextLine();
         System.out.print("Ingrese el nombre del departamento: ");
-        String departamento = scanner.nextLine();
-        departamentos.add(departamento);
+        String nombre = scanner.nextLine();
+        System.out.print("Ingrese el tipo del departamento: ");
+        String tipo = scanner.nextLine();
+        System.out.print("Ingrese la ubicación del departamento: ");
+        String ubicacion = scanner.nextLine();
+        System.out.print("Ingrese el teléfono del departamento: ");
+        String telefono = scanner.nextLine();
+        Departamento nuevoDepartamento = new Departamento(codigo, nombre, tipo, ubicacion, telefono);
+        departamentos.add(nuevoDepartamento);
         System.out.println("Departamento registrado exitosamente.");
     }
 
+
     private static void actualizarDepartamento() {
         System.out.print("Ingrese el nombre del departamento a actualizar: ");
-        String departamento = scanner.nextLine();
-        if (departamentos.contains(departamento)) {
+        String nombreDepartamento = scanner.nextLine();
+        Departamento departamentoAActualizar = null;
+
+        for (Departamento dep : departamentos) {
+            if (dep.getNombre().equalsIgnoreCase(nombreDepartamento)) {
+                departamentoAActualizar = dep;
+                break;
+            }
+        }
+
+        if (departamentoAActualizar != null) {
             System.out.print("Ingrese el nuevo nombre del departamento: ");
             String nuevoNombre = scanner.nextLine();
-            departamentos.set(departamentos.indexOf(departamento), nuevoNombre);
+            departamentoAActualizar.setNombre(nuevoNombre);
             System.out.println("Departamento actualizado exitosamente.");
         } else {
             System.out.println("Departamento no encontrado.");
         }
     }
 
-    private static void registrarMetrica() {
-        System.out.print("Ingrese el nombre de la métrica: ");
-        String metrica = scanner.nextLine();
-        metricas.add(metrica);
-        System.out.println("Métrica registrada exitosamente.");
-    }
+    private static void registrarReporte() {
+        System.out.print("Ingrese el ID del empleado para el reporte: ");
+        int idEmpleado = scanner.nextInt();
+        scanner.nextLine(); // Consumir la línea pendiente
+        Empleado empleadoReportado = null;
 
-    private static void actualizarMetrica() {
-        System.out.print("Ingrese el nombre de la métrica a actualizar: ");
-        String metrica = scanner.nextLine();
-        if (metricas.contains(metrica)) {
-            System.out.print("Ingrese el nuevo nombre de la métrica: ");
-            String nuevoNombre = scanner.nextLine();
-            metricas.set(metricas.indexOf(metrica), nuevoNombre);
-            System.out.println("Métrica actualizada exitosamente.");
-        } else {
-            System.out.println("Métrica no encontrada.");
+        for (Empleado emp : empleados) {
+            if (emp.getId() == idEmpleado) {
+                empleadoReportado = emp;
+                break;
+            }
         }
-    }
 
-    private static void generarInformeDepartamental() {
-        System.out.println("\n--- Generando Informe Departamental ---");
-        System.out.println("Informe departamental generado exitosamente.");
-    }
+        if (empleadoReportado != null) {
+            // Obtener el departamento del empleado
+            Departamento departamentoEmpleado = empleadoReportado.getDepartamento();
 
-    private static void generarInformeIndividual() {
-        System.out.println("\n--- Generando Informe Individual ---");
-        System.out.print("Ingrese el nombre del empleado: ");
-        String empleado = scanner.nextLine();
-        if (empleados.contains(empleado)) {
-            System.out.println("Informe individual generado para el empleado: " + empleado);
+            System.out.print("Ingrese la fecha del reporte (dd/MM/yyyy): ");
+            String fechaStr = scanner.nextLine();
+            Date fecha = null;
+
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                fecha = sdf.parse(fechaStr);
+            } catch (ParseException e) {
+                System.out.println("Formato de fecha inválido. Reporte no registrado.");
+                return;
+            }
+
+            System.out.print("Ingrese la métrica (ej. rendimiento): ");
+            String metricaStr = scanner.nextLine();
+
+            int metrica = 0;
+            boolean metricaValida = false;
+
+            while (!metricaValida) {
+                System.out.print("Ingrese el valor de la métrica (número entero): ");
+                try {
+                    metrica = scanner.nextInt();
+                    metricaValida = true; // Si la conversión es exitosa, salimos del bucle
+                } catch (Exception e) {
+                    System.out.println("Valor inválido. Por favor, ingrese un número entero válido.");
+                    scanner.nextLine(); // Limpiar el buffer
+                }
+            }
+
+            // Asumir que el ID del reporte es el tamaño actual de la lista más uno
+            int idReporte = reportes.size() + 1;
+
+            ReporteDesempenio nuevoReporte = new ReporteDesempenio(idReporte, empleadoReportado, departamentoEmpleado, fecha, metrica);
+            reportes.add(nuevoReporte);
+            System.out.println("Reporte registrado exitosamente.");
         } else {
             System.out.println("Empleado no encontrado.");
         }
+    }
+
+
+    private static void actualizarReporte() {
+        System.out.print("Ingrese el ID del reporte a actualizar: ");
+        // Aquí debería implementar la lógica para buscar y actualizar un reporte.
+        System.out.println("Funcionalidad de actualización de reportes no implementada.");
+    }
+
+    private static void generarInformeDepartamental() {
+        System.out.print("Ingrese el nombre del departamento para generar el informe: ");
+        String nombreDepartamento = scanner.nextLine();
+        for (Departamento dep : departamentos) {
+            if (dep.getNombre().equalsIgnoreCase(nombreDepartamento)) {
+                // Generar informe para el departamento.
+                System.out.println("Generando informe para el departamento: " + dep.getNombre());
+                return;
+            }
+        }
+        System.out.println("Departamento no encontrado.");
+    }
+
+    private static void generarInformeIndividual() {
+        System.out.print("Ingrese el ID del empleado para generar el informe: ");
+        int idEmpleado = scanner.nextInt();
+        scanner.nextLine();
+        Empleado empleado = null;
+        for (Empleado emp : empleados) {
+            if (emp.getId() == idEmpleado) {
+                empleado = emp;
+                break;
+            }
+        }
+        if (empleado != null) {
+            // Generar informe para el empleado.
+            System.out.println("Generando informe para el empleado: " + empleado.getNombre());
+            return;
+        }
+        System.out.println("Empleado no encontrado.");
     }
 
     private static void mostrarMenuEmpleado() {
@@ -288,29 +408,32 @@ public class Main {
             scanner.nextLine();
 
             switch (opcion) {
-                case 1:
-                    consultarInformeRendimiento();
-                    break;
-                case 2:
+                case 1 -> consultarInformeRendimiento();
+                case 2 -> {
                     salir = true;
                     System.out.println("Cerrando sesión de empleado...");
-                    break;
-                default:
-                    System.out.println("Opción inválida, intente nuevamente.");
+                }
+                default -> System.out.println("Opción inválida, intente nuevamente.");
             }
         }
     }
 
     private static void consultarInformeRendimiento() {
-        System.out.println("\n--- Consultando Informe de Rendimiento ---");
-        System.out.print("Ingrese su nombre: ");
-        String empleado = scanner.nextLine();
-        if (empleados.contains(empleado)) {
-            System.out.println("Informe de rendimiento para " + empleado + ": [Detalles del informe aquí]");
-        } else {
-            System.out.println("Empleado no encontrado.");
+        System.out.print("Ingrese su ID para consultar su informe: ");
+        int idEmpleado = scanner.nextInt();
+        scanner.nextLine();
+        Empleado empleado = null;
+        for (Empleado emp : empleados) {
+            if (emp.getId() == idEmpleado) {
+                empleado = emp;
+                break;
+            }
         }
+        if (empleado != null) {
+            // Lógica para mostrar el informe de rendimiento del empleado.
+            System.out.println("Consultando informe de rendimiento para el empleado: " + empleado.getNombre());
+            return;
+        }
+        System.out.println("Empleado no encontrado.");
     }
-    // prueba commit
-
 }
