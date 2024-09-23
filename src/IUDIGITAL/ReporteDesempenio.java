@@ -51,17 +51,16 @@ public class ReporteDesempenio {
         this.metricas = metricas;
     }
 
-    public class ReporteDesempenioDepartamento {
 
-        public double calcularPromedioMetrica(List<ReporteDesempenio> reportes) {
+    public double calcularPromedioMetrica(List<ReporteDesempenio> reportes) {
             double suma = 0;
             for (ReporteDesempenio reporte : reportes) {
                 suma += reporte.getMetricas();
             }
             return suma / reportes.size();
-        }
+    }
 
-        public int contarEmpleados(List<ReporteDesempenio> reportes) {
+    public int contarEmpleados(List<ReporteDesempenio> reportes) {
             int count = 0;
 
             List<Empleado> empleadosContados = new ArrayList<>();
@@ -74,9 +73,9 @@ public class ReporteDesempenio {
                 }
             }
             return count;
-        }
+    }
 
-        public void imprimirReporteDepartamento(List<ReporteDesempenio> reportes) {
+    public void imprimirReporteDepartamento(List<ReporteDesempenio> reportes) {
             if (reportes.isEmpty()) {
                 System.out.println("No hay reportes disponibles.");
                 return;
@@ -86,12 +85,9 @@ public class ReporteDesempenio {
             System.out.println("Reporte Departamento: " + nombreDepartamento);
             System.out.println("Número de empleados: " + contarEmpleados(reportes));
             System.out.println("Promedio de la métrica: " + calcularPromedioMetrica(reportes));
-        }
+
     }
-
-    public class ReporteDesempenioEmpleado {
-
-        public void imprimirReporteEmpleado(List<ReporteDesempenio> reportes, Empleado empleadoSolicitado) {
+    public void imprimirReporteEmpleado(List<ReporteDesempenio> reportes, Empleado empleadoSolicitado) {
             for (ReporteDesempenio reporte : reportes) {
                 if (reporte.getEmpleado().equals(empleadoSolicitado)) {
                     System.out.println("Reporte de Desempeño");
@@ -103,6 +99,6 @@ public class ReporteDesempenio {
                 }
             }
             System.out.println("No se encontró ningún reporte para el empleado: " + empleadoSolicitado.getNombre());
-        }
     }
+
 }

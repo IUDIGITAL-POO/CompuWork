@@ -16,10 +16,18 @@ public class Main {
     private static final Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
+        inicializarDatos();
+        mostrarMenuPrincipal();
+    }
+    public static void mostrarMenuPrincipal() {
         boolean salir = false;
 
         while (!salir) {
-            mostrarMenuPrincipal();
+            System.out.println("\n--- Menú Principal ---");
+            System.out.println("1. Registrar Usuario");
+            System.out.println("2. Iniciar Sesión");
+            System.out.println("3. Salir");
+            System.out.print("Seleccione una opción: ");
             int opcion = scanner.nextInt();
             scanner.nextLine();
 
@@ -37,21 +45,11 @@ public class Main {
         scanner.close();
     }
 
-    private static void mostrarMenuPrincipal(){
-        System.out.println("\n--- Menú Principal ---");
-        System.out.println("1. Registrar Usuario");
-        System.out.println("2. Iniciar Sesión");
-        System.out.println("3. Salir");
-        System.out.print("Seleccione una opción: ");
-    }
-
     private static void registrarUsuario() {
         System.out.print("Ingrese nombre de usuario: ");
         String nombreUsuario = scanner.nextLine();
-
         System.out.print("Ingrese contraseña: ");
         String contrasena = scanner.nextLine();
-
         System.out.println("Seleccione un rol:");
         System.out.println("1. Administrador");
         System.out.println("2. Empleado");
@@ -73,7 +71,6 @@ public class Main {
     private static void iniciarSesion() {
         System.out.print("Ingrese nombre de usuario: ");
         String nombreUsuario = scanner.nextLine();
-
         System.out.print("Ingrese contraseña: ");
         String contrasena = scanner.nextLine();
 
@@ -435,5 +432,18 @@ public class Main {
             return;
         }
         System.out.println("Empleado no encontrado.");
+    }
+
+//    Datos iniciales para probar el programa
+    public static void inicializarDatos() {
+        usuarios.add(new Usuario("admin", "admin123", "Administrador"));
+        usuarios.add(new Usuario("empleado1", "emp123", "Empleado"));
+
+        Departamento rrhh = new Departamento(1, "Recursos Humanos", "Administrativo", "Piso 2", "123-456-7890");
+        departamentos.add(rrhh);
+
+        Empleado emp1 = new Empleado("Juan Pérez", 1, "Permanente", 50000.0);
+        emp1.asignarDepartamento(rrhh);
+        empleados.add(emp1);
     }
 }
