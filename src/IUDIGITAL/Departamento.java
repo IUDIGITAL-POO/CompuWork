@@ -5,6 +5,7 @@ package IUDIGITAL;
 
 // Atributos de 5 departamentos.
 public class Departamento {
+
     private in codigo;
     private String nombre;
     private String tipo;
@@ -30,4 +31,5 @@ public class Departamento {
             System.out.println("- " + empleado.getNombre());
         }
     }
+
 }
