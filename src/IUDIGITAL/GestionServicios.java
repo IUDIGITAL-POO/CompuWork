@@ -331,6 +331,25 @@ public class GestionServicios {
         }
         System.out.println("Empleado no encontrado.");
     }
+
+    public static void consultarInformeRendimiento() {
+        System.out.print("Ingrese su ID para consultar su informe: ");
+        int idEmpleado = scanner.nextInt();
+        scanner.nextLine();
+        Empleado empleado = null;
+        for (Empleado emp : empleados) {
+            if (emp.getId() == idEmpleado) {
+                empleado = emp;
+                break;
+            }
+        }
+        if (empleado != null) {
+            System.out.println("Consultando informe de rendimiento para el empleado: " + empleado.getNombre());
+            new ReporteDesempenio(0, empleado, null, null, 0).imprimirReporteEmpleado(reportes, empleado);
+            return;
+        }
+        System.out.println("Empleado no encontrado.");
+    }
     //    Fin de metodos para visualizar reportes
 
     //    Datos iniciales para probar el programa

@@ -9,10 +9,6 @@ import java.text.ParseException;
 
 public class Main {
     private static GestionServicios gestionServicios = new GestionServicios();
-    private static List<Usuario> usuarios = new ArrayList<Usuario>();
-    private static List<Empleado> empleados = new ArrayList<Empleado>();
-    private static List<Departamento> departamentos = new ArrayList<Departamento>();
-    private static List<ReporteDesempenio> reportes = new ArrayList<ReporteDesempenio>();
     private static final Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -165,7 +161,7 @@ public class Main {
             scanner.nextLine();
 
             switch (opcion) {
-                case 1 -> consultarInformeRendimiento();
+                case 1 -> gestionServicios.consultarInformeRendimiento();
                 case 2 -> {
                     salir = true;
                     System.out.println("Cerrando sesión de empleado...");
@@ -175,23 +171,6 @@ public class Main {
         }
     }
 
-    private static void consultarInformeRendimiento() {
-        System.out.print("Ingrese su ID para consultar su informe: ");
-        int idEmpleado = scanner.nextInt();
-        scanner.nextLine();
-        Empleado empleado = null;
-        for (Empleado emp : empleados) {
-            if (emp.getId() == idEmpleado) {
-                empleado = emp;
-                break;
-            }
-        }
-        if (empleado != null) {
-            // Lógica para mostrar el informe de rendimiento del empleado.
-            System.out.println("Consultando informe de rendimiento para el empleado: " + empleado.getNombre());
-            return;
-        }
-        System.out.println("Empleado no encontrado.");
-    }
+
 
 }
