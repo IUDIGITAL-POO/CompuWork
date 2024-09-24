@@ -1,10 +1,12 @@
 package IUDIGITAL;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
 
+    // Lista de usuarios registrados en el sistema
     private static List<Usuario> usuarios = new ArrayList<>();
     private static List<String> empleados = new ArrayList<>();
     private static List<String> departamentos = new ArrayList<>();
@@ -25,9 +27,9 @@ public class Main {
                 case 2 -> iniciarSesion();
                 case 3 -> {
                     salir = true;
-                    System.out.println("Saliendo del sistema...");
+                    System.out.println("Saliendo del sistema, gracias por escribir, que tenga un buen dia... :)");
                 }
-                default -> System.out.println("Opción inválida, intente nuevamente.");
+                default -> System.out.println("Ups, has elegido una opcion invalida, intente nuevamente.");
             }
         }
 
@@ -64,12 +66,11 @@ public class Main {
             return;
         }
 
-
+        // Crear un nuevo objeto Usuario y agregarlo a la lista de usuarios
         Usuario nuevoUsuario = new Usuario(nombreUsuario, contrasena, rol);
         usuarios.add(nuevoUsuario);
         System.out.println("Usuario registrado exitosamente.");
     }
-
 
     // separe el metodo iniciarSesion en dos metodos para mejorar la legibilidad del codigo
     private static void iniciarSesion() {
@@ -97,7 +98,7 @@ public class Main {
         return null;
     }
 
-        private static void mostrarMenuPorRol(String rol) {
+    private static void mostrarMenuPorRol(String rol) {
         if (rol.equals("Administrador")) {
             mostrarMenuAdministrador();
         } else if (rol.equals("Empleado")) {
@@ -148,7 +149,7 @@ public class Main {
         switch (opcion){
             case 1 -> registrarEmpleado();
             case 2 -> actualizarEmpleado();
-//            case 3 -> eliminarEmpleado();
+            case 3 -> eliminarEmpleado();
             case 4 -> System.out.println("Volviendo al menú principal...");
             default -> System.out.println("Opción inválida, intente nuevamente.");
         }
@@ -215,6 +216,17 @@ public class Main {
             String nuevoNombre = scanner.nextLine();
             empleados.set(empleados.indexOf(empleado), nuevoNombre);
             System.out.println("Empleado actualizado exitosamente.");
+        } else {
+            System.out.println("Empleado no encontrado.");
+        }
+    }
+
+    private static void eliminarEmpleado() {
+        System.out.print("Ingrese el nombre del empleado a eliminar: ");
+        String empleado = scanner.nextLine();
+        if (empleados.contains(empleado)) {
+            empleados.remove(empleado);
+            System.out.println("Empleado eliminado exitosamente.");
         } else {
             System.out.println("Empleado no encontrado.");
         }
@@ -312,5 +324,4 @@ public class Main {
         }
     }
     // prueba commit
-
 }
