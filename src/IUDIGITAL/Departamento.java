@@ -2,6 +2,7 @@
 package IUDIGITAL;
 
 public class Departamento {
+
     //atributos
     private String nombre;
     private String ubicacion;
