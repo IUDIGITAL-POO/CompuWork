@@ -86,8 +86,8 @@ public class GestionServicios {
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("ID de empleado inválido.");
         }
-        System.out.print("Ingrese el tipo de empleado: ");
-        String tipoEmpleado = scanner.nextLine();
+        System.out.print("Ingrese el tipo de empleado(temporal/permanente): ");
+        String tipoEmpleado = scanner.nextLine().toLowerCase();
         System.out.print("Ingrese el salario del empleado: ");
         double salario;
         try {
@@ -108,9 +108,24 @@ public class GestionServicios {
         do {
             System.out.print("Ingrese el número del departamento: ");
             opcionDepartamento = scanner.nextInt();
+            scanner.nextLine(); // Consumir el salto de línea restante
         } while (opcionDepartamento < 1 || opcionDepartamento > departamentos.size());
         Departamento departamentoSeleccionado = departamentos.get(opcionDepartamento - 1);
-        Empleado nuevoEmpleado = new Empleado(nombre, id, tipoEmpleado, salario);
+
+        Empleado nuevoEmpleado = null;
+        if (tipoEmpleado.equals("temporal")) {
+            System.out.print("Ingrese la fecha de inicio (dd/mm/aaaa): ");
+            String fechaInicio = scanner.nextLine();
+
+            System.out.print("Ingrese la fecha de fin (dd/mm/aaaa): ");
+            String fechaFin = scanner.nextLine();
+
+            nuevoEmpleado = new EmpleadoTemporal(nombre, id, tipoEmpleado, salario, fechaInicio, fechaFin);
+        } else if (tipoEmpleado.equals("permanente")) {
+            nuevoEmpleado = new EmpleadoPermanente(nombre, id, tipoEmpleado, salario);
+        } else {
+            throw new IllegalArgumentException("Tipo de empleado inválido.");
+        }
         nuevoEmpleado.asignarDepartamento(departamentoSeleccionado);
         empleados.add(nuevoEmpleado);
         System.out.println("Empleado registrado exitosamente en el departamento: " + departamentoSeleccionado.getNombre());
