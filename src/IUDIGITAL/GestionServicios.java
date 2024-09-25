@@ -30,8 +30,12 @@ public class GestionServicios {
         System.out.println("Seleccione un rol:");
         System.out.println("1. Administrador");
         System.out.println("2. Empleado");
-        int rolOpcion = scanner.nextInt();
-        scanner.nextLine();
+        int rolOpcion;
+        try {
+            rolOpcion = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Opción de rol inválida.");
+        }
 
         if (rolOpcion != 1 && rolOpcion != 2) {
             System.out.println("Opción de rol inválida, registro fallido.");
@@ -57,9 +61,8 @@ public class GestionServicios {
             System.out.println("Inicio de sesión exitoso. Bienvenido, " + usuario.getNombreUsuario() + " (Rol: " + usuario.getRol() + ")");
             return usuario;
         } else {
-            System.out.println("Nombre de usuario o contraseña incorrectos.");
+            throw new SecurityException("Nombre de usuario o contraseña incorrectos.");
         }
-        return null;
     }
 
     private static Usuario buscarUsuario(String nombreUsuario, String contrasena) {
@@ -77,13 +80,26 @@ public class GestionServicios {
         System.out.print("Ingrese el nombre del empleado: ");
         String nombre = scanner.nextLine();
         System.out.print("Ingrese el ID del empleado: ");
-        int id = scanner.nextInt();
-        scanner.nextLine();
-        System.out.print("Ingrese el tipo de empleado: ");
-        String tipoEmpleado = scanner.nextLine();
+        int id;
+        try {
+            id = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("ID de empleado inválido.");
+        }
+        System.out.print("Ingrese el tipo de empleado(temporal/permanente): ");
+        String tipoEmpleado = scanner.nextLine().toLowerCase();
         System.out.print("Ingrese el salario del empleado: ");
-        double salario = scanner.nextDouble();
-        scanner.nextLine();
+        double salario;
+        try {
+            salario = Double.parseDouble(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Salario inválido.");
+        }
+
+        if (departamentos.isEmpty()) {
+            throw new IllegalStateException("No hay departamentos registrados. Por favor, registre un departamento primero.");
+        }
+
         System.out.println("Seleccione un departamento para el empleado:");
         for (int i = 0; i < departamentos.size(); i++) {
             System.out.println((i + 1) + ". " + departamentos.get(i).getNombre());
@@ -92,18 +108,38 @@ public class GestionServicios {
         do {
             System.out.print("Ingrese el número del departamento: ");
             opcionDepartamento = scanner.nextInt();
+            scanner.nextLine(); // Consumir el salto de línea restante
         } while (opcionDepartamento < 1 || opcionDepartamento > departamentos.size());
         Departamento departamentoSeleccionado = departamentos.get(opcionDepartamento - 1);
-        Empleado nuevoEmpleado = new Empleado(nombre, id, tipoEmpleado, salario);
+
+        Empleado nuevoEmpleado = null;
+        if (tipoEmpleado.equals("temporal")) {
+            System.out.print("Ingrese la fecha de inicio (dd/mm/aaaa): ");
+            String fechaInicio = scanner.nextLine();
+
+            System.out.print("Ingrese la fecha de fin (dd/mm/aaaa): ");
+            String fechaFin = scanner.nextLine();
+
+            nuevoEmpleado = new EmpleadoTemporal(nombre, id, tipoEmpleado, salario, fechaInicio, fechaFin);
+        } else if (tipoEmpleado.equals("permanente")) {
+            nuevoEmpleado = new EmpleadoPermanente(nombre, id, tipoEmpleado, salario);
+        } else {
+            throw new IllegalArgumentException("Tipo de empleado inválido.");
+        }
         nuevoEmpleado.asignarDepartamento(departamentoSeleccionado);
         empleados.add(nuevoEmpleado);
         System.out.println("Empleado registrado exitosamente en el departamento: " + departamentoSeleccionado.getNombre());
     }
 
-    public static void actualizarEmpleado() {
+    public static void actualizarEmpleado() throws IllegalArgumentException {
         System.out.print("Ingrese el ID del empleado a actualizar: ");
-        int idEmpleado = scanner.nextInt();
-        scanner.nextLine();
+        int idEmpleado;
+        try {
+            idEmpleado = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("ID de empleado inválido.");
+        }
+
         Empleado empleadoAActualizar = null;
         for (Empleado emp : empleados) {
             if (emp.getId() == idEmpleado) {
@@ -111,28 +147,33 @@ public class GestionServicios {
                 break;
             }
         }
-        if (empleadoAActualizar != null) {
-            System.out.println("Empleado encontrado: " + empleadoAActualizar.getNombre());
-            System.out.print("Ingrese el nuevo nombre (dejar vacío para mantener el nombre actual): ");
-            String nuevoNombre = scanner.nextLine();
-            if (!nuevoNombre.isEmpty()) {
-                empleadoAActualizar.setNombre(nuevoNombre);
-            }
-            System.out.print("Ingrese el nuevo tipo de empleado (dejar vacío para mantener el actual): ");
-            String nuevoTipoEmpleado = scanner.nextLine();
-            if (!nuevoTipoEmpleado.isEmpty()) {
-                empleadoAActualizar.setTipoEmpleado(nuevoTipoEmpleado);
-            }
-            System.out.print("Ingrese el nuevo salario (dejar vacío para mantener el actual): ");
-            String nuevoSalarioStr = scanner.nextLine();
-            if (!nuevoSalarioStr.isEmpty()) {
+
+        if (empleadoAActualizar == null) {
+            throw new IllegalArgumentException("Empleado no encontrado.");
+        }
+
+        System.out.println("Empleado encontrado: " + empleadoAActualizar.getNombre());
+        System.out.print("Ingrese el nuevo nombre (dejar vacío para mantener el nombre actual): ");
+        String nuevoNombre = scanner.nextLine();
+        if (!nuevoNombre.isEmpty()) {
+            empleadoAActualizar.setNombre(nuevoNombre);
+        }
+        System.out.print("Ingrese el nuevo tipo de empleado (dejar vacío para mantener el actual): ");
+        String nuevoTipoEmpleado = scanner.nextLine();
+        if (!nuevoTipoEmpleado.isEmpty()) {
+            empleadoAActualizar.setTipoEmpleado(nuevoTipoEmpleado);
+        }
+        System.out.print("Ingrese el nuevo salario (dejar vacío para mantener el actual): ");
+        String nuevoSalarioStr = scanner.nextLine();
+        if (!nuevoSalarioStr.isEmpty()) {
+            try {
                 double nuevoSalario = Double.parseDouble(nuevoSalarioStr);
                 empleadoAActualizar.setSalario(nuevoSalario);
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Salario inválido.");
             }
-            System.out.println("Empleado actualizado exitosamente.");
-        } else {
-            System.out.println("Empleado no encontrado.");
         }
+        System.out.println("Empleado actualizado exitosamente.");
     }
 
     public void eliminarEmpleado() {
@@ -236,8 +277,12 @@ public class GestionServicios {
 
     public static void registrarReporte() {
         System.out.print("Ingrese el ID del empleado para el reporte: ");
-        int idEmpleado = scanner.nextInt();
-        scanner.nextLine(); // Consumir la línea pendiente
+        int idEmpleado;
+        try {
+            idEmpleado = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("ID de empleado inválido.");
+        }
         Empleado empleadoReportado = null;
 
         for (Empleado emp : empleados) {
