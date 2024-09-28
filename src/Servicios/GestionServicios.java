@@ -8,74 +8,21 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
+import Modelo.Usuario;
+import javax.swing.*;
+import java.awt.*;
 
 public class GestionServicios {
-    private static List<Usuario> usuarios;
     private static List<Empleado> empleados;
     private static List<Departamento> departamentos;
     private static List<ReporteDesempenio> reportes;
     private static final Scanner scanner = new Scanner(System.in);
 
     public GestionServicios() {
-        usuarios = new ArrayList<>();
         empleados = new ArrayList<>();
         departamentos = new ArrayList<>();
         reportes = new ArrayList<>();
     }
-
-    //  *  Metodos para gestionar los usuarios
-    public static void registrarUsuario() {
-        System.out.print("Ingrese nombre de usuario: ");
-        String nombreUsuario = scanner.nextLine();
-        System.out.print("Ingrese contraseña: ");
-        String contrasena = scanner.nextLine();
-        System.out.println("Seleccione un rol:");
-        System.out.println("1. Administrador");
-        System.out.println("2. Empleado");
-        int rolOpcion;
-        try {
-            rolOpcion = Integer.parseInt(scanner.nextLine());
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Opción de rol inválida.");
-        }
-
-        if (rolOpcion != 1 && rolOpcion != 2) {
-            System.out.println("Opción de rol inválida, registro fallido.");
-            return;
-        }
-
-        String rol = (rolOpcion == 1) ? "Administrador" : "Empleado";
-
-        Usuario nuevoUsuario = new Usuario(nombreUsuario, contrasena, rol);
-        usuarios.add(nuevoUsuario);
-        System.out.println("Usuario registrado exitosamente.");
-    }
-
-    public static Usuario iniciarSesion() {
-        System.out.print("Ingrese nombre de usuario: ");
-        String nombreUsuario = scanner.nextLine();
-        System.out.print("Ingrese contraseña: ");
-        String contrasena = scanner.nextLine();
-
-        Usuario usuario = buscarUsuario(nombreUsuario, contrasena);
-
-        if (usuario != null) {
-            System.out.println("Inicio de sesión exitoso. Bienvenido, " + usuario.getNombreUsuario() + " (Rol: " + usuario.getRol() + ")");
-            return usuario;
-        } else {
-            throw new SecurityException("Nombre de usuario o contraseña incorrectos.");
-        }
-    }
-
-    private static Usuario buscarUsuario(String nombreUsuario, String contrasena) {
-        for (Usuario usuario : usuarios) {
-            if (usuario.getNombreUsuario().equals(nombreUsuario) && usuario.getContrasena().equals(contrasena)) {
-                return usuario;
-            }
-        }
-        return null;
-    }
-    // * Fin de metodos para gestionar usuarios
 
     //    Metodos para gestionar empleados
     public static void registrarEmpleado() {
@@ -399,26 +346,4 @@ public class GestionServicios {
     }
     //    Fin de metodos para visualizar reportes
 
-    //    Datos iniciales para probar el programa
-    public static void inicializarDatos() {
-        usuarios.add(new Usuario("admin", "admin123", "Administrador"));
-        usuarios.add(new Usuario("empleado1", "emp123", "Empleado"));
-
-        Departamento rrhh = new Departamento(1, "Recursos Humanos", "Administrativo", "Piso 2", "123-456-7890");
-        departamentos.add(rrhh);
-
-        Empleado emp1 = new Empleado("Juan Pérez", 1, "Permanente", 50000.0);
-        emp1.asignarDepartamento(rrhh);
-        empleados.add(emp1);
-
-        ReporteDesempenio reporte1 = new ReporteDesempenio(1, emp1, rrhh, new Date(), 90);
-        reportes.add(reporte1);
-
-        Empleado emp2 = new Empleado("María López", 2, "Temporal", 30000.0);
-        emp2.asignarDepartamento(rrhh);
-        empleados.add(emp2);
-
-        ReporteDesempenio reporte2 = new ReporteDesempenio(2, emp2, rrhh, new Date(), 75);
-        reportes.add(reporte2);
-    }
 }

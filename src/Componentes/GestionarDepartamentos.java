@@ -1,7 +1,6 @@
 package Componentes;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class GestionarDepartamentos extends JPanel {
     public GestionarDepartamentos() {
