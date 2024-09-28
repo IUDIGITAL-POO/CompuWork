@@ -1,4 +1,4 @@
-package IUDIGITAL;
+package Modelo;
 
 public class Empleado {
     // Atributos

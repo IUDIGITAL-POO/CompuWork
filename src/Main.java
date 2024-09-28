@@ -1,11 +1,7 @@
-package IUDIGITAL;
+import Servicios.GestionServicios;
+import Modelo.Usuario;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
-import java.util.Date;
-import java.text.SimpleDateFormat;
-import java.text.ParseException;
 
 public class Main {
     private static GestionServicios gestionServicios = new GestionServicios();
