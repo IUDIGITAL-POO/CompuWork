@@ -13,6 +13,8 @@ public class RegistrarUsuario extends JFrame {
     private JPasswordField txtContrasena;
     private JComboBox<String> comboRol;
     private UsuarioServicios usuarioServicios; // Instancia de UsuarioServicios
+    private Color textColor = Color.DARK_GRAY; // Color de texto
+    private Color buttonColor = Color.BLUE; // Color del botón
 
     // Constructor que recibe UsuarioServicios
     public RegistrarUsuario(UsuarioServicios usuarioServicios) {
@@ -21,35 +23,47 @@ public class RegistrarUsuario extends JFrame {
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setLayout(new GridLayout(4, 2));
+        setLayout(new GridBagLayout()); // Cambiar a GridBagLayout
 
-        // Estilos generales
-        Color backgroundColor = new Color(240, 240, 240);
-        Color buttonColor = new Color(60, 120, 240);
-        Color textColor = Color.DARK_GRAY;
-
-        // Establecer color de fondo
-        getContentPane().setBackground(backgroundColor);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(10, 10, 10, 10); // Espaciado entre componentes
 
         // Etiquetas y campos para ingresar datos
         JLabel labelNombreUsuario = new JLabel("Nombre de Usuario:");
-        labelNombreUsuario.setForeground(textColor); // Cambiar color de texto
+        labelNombreUsuario.setForeground(textColor);
+        gbc.gridx = 0; // Columna
+        gbc.gridy = 0; // Fila
+        add(labelNombreUsuario, gbc);
+
         txtNombreUsuario = new JTextField();
         styleTextField(txtNombreUsuario);
+        gbc.gridx = 1; // Columna
+        add(txtNombreUsuario, gbc);
 
         JLabel labelContrasena = new JLabel("Contraseña:");
         labelContrasena.setForeground(textColor);
+        gbc.gridx = 0; // Columna
+        gbc.gridy = 1; // Fila
+        add(labelContrasena, gbc);
+
         txtContrasena = new JPasswordField();
         styleTextField(txtContrasena);
+        gbc.gridx = 1; // Columna
+        add(txtContrasena, gbc);
 
         JLabel labelRol = new JLabel("Rol:");
         labelRol.setForeground(textColor);
+        gbc.gridx = 0; // Columna
+        gbc.gridy = 2; // Fila
+        add(labelRol, gbc);
+
         String[] roles = {"Administrador", "Empleado"};
         comboRol = new JComboBox<>(roles);
-
-        // Estilo para el comboBox
         comboRol.setBackground(Color.WHITE);
         comboRol.setForeground(textColor);
+        gbc.gridx = 1; // Columna
+        add(comboRol, gbc);
 
         // Botón para registrar el usuario
         JButton btnRegistrar = new JButton("Registrar");
@@ -60,8 +74,8 @@ public class RegistrarUsuario extends JFrame {
         btnRegistrar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Asegúrate de obtener el texto del campo de texto
-                String nombreUsuario = txtNombreUsuario.getText(); // txtNombreUsuario debe ser de tipo JTextField
+                // Obtener el texto del campo de texto
+                String nombreUsuario = txtNombreUsuario.getText();
                 String contrasena = new String(txtContrasena.getPassword());
                 String rol = (String) comboRol.getSelectedItem();
 
@@ -78,15 +92,10 @@ public class RegistrarUsuario extends JFrame {
             }
         });
 
-        // Agregar los componentes a la ventana
-        add(labelNombreUsuario);
-        add(txtNombreUsuario);
-        add(labelContrasena);
-        add(txtContrasena);
-        add(labelRol);
-        add(comboRol);
-        add(new JLabel()); // Espacio vacío
-        add(btnRegistrar);
+        gbc.gridx = 0; // Columna
+        gbc.gridy = 3; // Fila
+        gbc.gridwidth = 2; // Ocupa dos columnas
+        add(btnRegistrar, gbc);
 
         setVisible(true);
     }
