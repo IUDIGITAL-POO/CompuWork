@@ -1,6 +1,7 @@
 package Componentes;
 
 import Modelo.Empleado;
+import Modelo.EmpleadoTemporal;
 import Servicios.EmpleadoServicios;
 import javax.swing.*;
 import java.awt.*;
@@ -49,15 +50,18 @@ public class GestionarEmpleados extends JPanel {
     }
 
     private void mostrarFormularioAgregar() {
-
-        JOptionPane.showMessageDialog(this, "Formulario de agregar empleado (por implementar)");
+        FormularioEmpleado formulario = new FormularioEmpleado((JFrame) SwingUtilities.getWindowAncestor(this), empleadoServicios);
+        formulario.setVisible(true);
+        cargarEmpleados(); // Actualizar la lista después de agregar
     }
 
     private void editarEmpleadoSeleccionado() {
         Empleado empleadoSeleccionado = listaEmpleados.getSelectedValue();
         if (empleadoSeleccionado != null) {
-            // Implementar lógica de edición
-            JOptionPane.showMessageDialog(this, "Editando empleado: " + empleadoSeleccionado.getNombre());
+            FormularioEmpleado formulario = new FormularioEmpleado((JFrame) SwingUtilities.getWindowAncestor(this), empleadoServicios);
+            formulario.setEmpleadoEditar(empleadoSeleccionado);
+            formulario.setVisible(true);
+            cargarEmpleados(); // Actualizar la lista después de editar
         } else {
             JOptionPane.showMessageDialog(this, "Por favor, seleccione un empleado para editar.");
         }
