@@ -15,16 +15,13 @@ public class GestionarEmpleados extends JPanel {
         this.empleadoServicios = empleadoServicios;
         setLayout(new BorderLayout());
 
-        // Crear modelo de lista y JList
         modeloLista = new DefaultListModel<>();
         listaEmpleados = new JList<>(modeloLista);
         listaEmpleados.setCellRenderer(new EmpleadoListCellRenderer());
 
-        // Agregar JList a un JScrollPane
         JScrollPane scrollPane = new JScrollPane(listaEmpleados);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Panel de botones
         JPanel panelBotones = new JPanel();
         JButton btnAgregar = new JButton("Agregar Empleado");
         JButton btnEditar = new JButton("Editar Empleado");
@@ -36,12 +33,10 @@ public class GestionarEmpleados extends JPanel {
 
         add(panelBotones, BorderLayout.SOUTH);
 
-        // Agregar ActionListeners
         btnAgregar.addActionListener(e -> mostrarFormularioAgregar());
         btnEditar.addActionListener(e -> editarEmpleadoSeleccionado());
         btnEliminar.addActionListener(e -> eliminarEmpleadoSeleccionado());
 
-        // Cargar empleados iniciales
         cargarEmpleados();
     }
 
@@ -54,7 +49,7 @@ public class GestionarEmpleados extends JPanel {
     }
 
     private void mostrarFormularioAgregar() {
-        // Implementar formulario para agregar empleado
+
         JOptionPane.showMessageDialog(this, "Formulario de agregar empleado (por implementar)");
     }
 
