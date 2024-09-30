@@ -14,66 +14,36 @@ public class DepartamentoServicios {
         departamentos = new ArrayList<>();
     }
 
-    public static void registrarDepartamento() {
-        System.out.print("Ingrese el código del departamento: ");
-        int codigo = scanner.nextInt();
-        scanner.nextLine();
-        System.out.print("Ingrese el nombre del departamento: ");
-        String nombre = scanner.nextLine();
-        System.out.print("Ingrese el tipo del departamento: ");
-        String tipo = scanner.nextLine();
-        System.out.print("Ingrese la ubicación del departamento: ");
-        String ubicacion = scanner.nextLine();
-        System.out.print("Ingrese el teléfono del departamento: ");
-        String telefono = scanner.nextLine();
-        Departamento nuevoDepartamento = new Departamento(codigo, nombre, tipo, ubicacion, telefono);
-        departamentos.add(nuevoDepartamento);
-        System.out.println("Departamento registrado exitosamente.");
+    public static void registrarDepartamento(Departamento departamento) {
+        departamentos.add(departamento);
     }
 
 
-    public static void actualizarDepartamento() {
-        System.out.print("Ingrese el nombre del departamento a actualizar: ");
-        String nombreDepartamento = scanner.nextLine();
-        Departamento departamentoAActualizar = null;
-
-        for (Departamento dep : departamentos) {
-            if (dep.getNombre().equalsIgnoreCase(nombreDepartamento)) {
-                departamentoAActualizar = dep;
+    public static void actualizarDepartamento(Departamento departamentoActualizado) {
+        // Buscar el departamento existente por nombre y actualizarlo
+        for (int i = 0; i < departamentos.size(); i++) {
+            if (departamentos.get(i).getCodigo() == departamentoActualizado.getCodigo()) {
+                departamentos.set(i, departamentoActualizado);
                 break;
             }
-        }
-
-        if (departamentoAActualizar != null) {
-            System.out.print("Ingrese el nuevo nombre del departamento: ");
-            String nuevoNombre = scanner.nextLine();
-            departamentoAActualizar.setNombre(nuevoNombre);
-            System.out.println("Departamento actualizado exitosamente.");
-        } else {
-            System.out.println("Departamento no encontrado.");
         }
     }
 
-    public static void eliminarDepartamento(){
-        System.out.print("Ingrese el nombre del departamento a eliminar: ");
-        String nombreDepartamento = scanner.nextLine();
-        Departamento departamentoAEliminar = null;
+    public static void eliminarDepartamento(int codigo) {
+        departamentos.removeIf(dep -> dep.getCodigo() == codigo);
+    }
+
+    public Departamento buscarDepartamentoPorCodigo(int codigo) {
         for (Departamento dep : departamentos) {
-            if (dep.getNombre().equalsIgnoreCase(nombreDepartamento)) {
-                departamentoAEliminar = dep;
-                break;
+            if (dep.getCodigo() == codigo) {
+                return dep;
             }
         }
-        if (departamentoAEliminar != null) {
-            departamentos.remove(departamentoAEliminar);
-            System.out.println("Departamento eliminado exitosamente.");
-        } else {
-            System.out.println("Departamento no encontrado.");
-        }
+        return null;
     }
 
     public List<Departamento> getDepartamentos() {
-        return departamentos;
+        return new ArrayList<>(departamentos);
     }
 
     public void inicializarDatos(){
