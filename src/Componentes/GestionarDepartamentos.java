@@ -49,15 +49,18 @@ public class GestionarDepartamentos extends JPanel {
     }
 
     private void mostrarFormularioAgregar() {
-        // Implementar formulario para agregar departamento
-        // Usar JOptionPane o un JDialog personalizado
+        FormularioDepartamento formulario = new FormularioDepartamento((JFrame) SwingUtilities.getWindowAncestor(this), departamentoServicios);
+        formulario.setVisible(true);
+        cargarDepartamentos();
     }
 
     private void editarDepartamentoSeleccionado() {
         Departamento departamentoSeleccionado = listaDepartamentos.getSelectedValue();
         if (departamentoSeleccionado != null) {
-            // Implementar lógica de edición
-            // Usar JOptionPane o un JDialog personalizado
+            FormularioDepartamento formulario = new FormularioDepartamento((JFrame) SwingUtilities.getWindowAncestor(this), departamentoServicios);
+            formulario.setDepartamentoEditar(departamentoSeleccionado);
+            formulario.setVisible(true);
+            cargarDepartamentos();
         } else {
             JOptionPane.showMessageDialog(this, "Por favor, seleccione un departamento para editar.");
         }
