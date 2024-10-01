@@ -70,6 +70,52 @@ public class ReporteDesempenioServicios {
         return reporte.toString();
     }
 
+    public String generarReporteImprimible(ReporteDesempenio reporte) {
+        StringBuilder sb = new StringBuilder();
+        String tipoReporte = (reporte.getEmpleado() != null) ? "Individual" : "Departamental";
+        String lineaSeparadora = "----------------------------------------\n";
+
+        // Encabezado
+        sb.append("\n          REPORTE DE DESEMPEÑO\n");
+        sb.append(lineaSeparadora);
+
+        // Información general
+        sb.append("Tipo de Reporte: ").append(tipoReporte).append("\n");
+        if (reporte.getEmpleado() != null) {
+            Empleado empleado = reporte.getEmpleado();
+            sb.append("Empleado:       ").append(empleado.getNombre()).append("\n");
+            sb.append("ID:             ").append(empleado.getId()).append("\n");
+            sb.append("Cargo:          ").append(empleado.getTipoEmpleado()).append("\n");
+        } else if (reporte.getDepartamento() != null) {
+            Departamento departamento = reporte.getDepartamento();
+            sb.append("Departamento:   ").append(departamento.getNombre()).append("\n");
+        }
+        sb.append(lineaSeparadora);
+
+        // Período de evaluación
+        sb.append("PERÍODO DE EVALUACIÓN\n");
+        sb.append("Fecha Inicio:    ").append(reporte.getFechaInicio()).append("\n");
+        sb.append("Fecha Fin:       ").append(reporte.getFechaFin()).append("\n");
+        sb.append(lineaSeparadora);
+
+        // Métricas
+        sb.append("MÉTRICAS DE DESEMPEÑO\n");
+        for (Map.Entry<String, Double> metrica : reporte.getMetricas().entrySet()) {
+            sb.append(String.format("%-15s: %.2f\n", metrica.getKey(), metrica.getValue()));
+        }
+        sb.append(lineaSeparadora);
+
+        // Puntuación total
+        sb.append(String.format("PUNTUACIÓN TOTAL: %.2f\n", reporte.getPuntuacionTotal()));
+        sb.append(lineaSeparadora);
+
+        // Comentarios
+        sb.append("COMENTARIOS Y OBSERVACIONES\n");
+        sb.append(reporte.getComentarios()).append("\n");
+
+        return sb.toString();
+    }
+
     // Obtener todos los reportes de un empleado
     public  List<ReporteDesempenio> obtenerReportesEmpleado(Empleado empleado) {
         return reportes.stream()
