@@ -14,7 +14,8 @@ public class RegistrarUsuario extends JFrame {
     private JComboBox<String> comboRol;
     private UsuarioServicios usuarioServicios; // Instancia de UsuarioServicios
     private Color textColor = Color.DARK_GRAY; // Color de texto
-    private Color buttonColor = Color.BLUE; // Color del botón
+    private Color buttonColorBLUE = Color.BLUE; // Color del botón
+    private Color buttonColorGRAY = Color.GRAY; // Color del botón
 
     // Constructor que recibe UsuarioServicios
     public RegistrarUsuario(UsuarioServicios usuarioServicios) {
@@ -65,19 +66,43 @@ public class RegistrarUsuario extends JFrame {
         gbc.gridx = 1; // Columna
         add(comboRol, gbc);
 
-        // Botón para registrar el usuario
+        JPanel buttonPanel = new JPanel();
+        JButton btnLogin = new JButton("Iniciar Sesión");
         JButton btnRegistrar = new JButton("Registrar");
-        btnRegistrar.setBackground(buttonColor);
+        // Botón para registrar el usuario
+        btnRegistrar.setBackground(buttonColorBLUE);
         btnRegistrar.setForeground(Color.WHITE);
         btnRegistrar.setFocusPainted(false);
         btnRegistrar.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Padding en el botón
         btnRegistrar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Obtener el texto del campo de texto
-                String nombreUsuario = txtNombreUsuario.getText();
-                String contrasena = new String(txtContrasena.getPassword());
+                // Obtener el texto del campo de texto y eliminar espacios en blanco
+                String nombreUsuario = txtNombreUsuario.getText().trim();
+                String contrasena = new String(txtContrasena.getPassword()).trim();
                 String rol = (String) comboRol.getSelectedItem();
+
+                // Validar que los campos no estén vacíos
+                if (nombreUsuario.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "El nombre de usuario no puede estar vacío.");
+                    return; // Salir del método si el campo está vacío
+                }
+
+                if (contrasena.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "La contraseña no puede estar vacía.");
+                    return; // Salir del método si el campo está vacío
+                }
+
+                if (rol == null || rol.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Debe seleccionar un rol.");
+                    return; // Salir del método si no se ha seleccionado un rol
+                }
+
+                // Validar si el nombre de usuario ya está registrado
+                if (usuarioServicios.existeUsuario(nombreUsuario)) {
+                    JOptionPane.showMessageDialog(null, "El nombre de usuario ya está registrado. Elija otro.");
+                    return; // Salir del método si el nombre de usuario ya existe
+                }
 
                 // Crear el usuario usando UsuarioServicios
                 Usuario usuario = new Usuario(nombreUsuario, contrasena, rol);
@@ -90,12 +115,29 @@ public class RegistrarUsuario extends JFrame {
                 txtContrasena.setText("");
                 comboRol.setSelectedIndex(0); // Resetear a "Administrador"
             }
-        });
 
+        });
+        // Botón para iniciar sesión
+        btnLogin.setBackground(buttonColorGRAY);
+        btnLogin.setForeground(Color.WHITE);
+        btnLogin.setFocusPainted(false);
+        btnLogin.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Padding en el botón
+        btnLogin.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Crear la ventana de login y pasarle la instancia de UsuarioServicios
+                Login login = new Login(usuarioServicios);
+                // Hacer visible la ventana de login
+                login.setVisible(true);
+                dispose(); // Cerrar la ventana Home
+            }
+        });
+        buttonPanel.add(btnLogin);
+        buttonPanel.add(btnRegistrar);
         gbc.gridx = 0; // Columna
         gbc.gridy = 3; // Fila
         gbc.gridwidth = 2; // Ocupa dos columnas
-        add(btnRegistrar, gbc);
+        add(buttonPanel, gbc);
 
         setVisible(true);
     }

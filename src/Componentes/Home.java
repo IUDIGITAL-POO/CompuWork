@@ -5,10 +5,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import Servicios.UsuarioServicios;
-import Componentes.RegistrarUsuario;
 
 public class Home extends JFrame {
     private UsuarioServicios usuarioServicios;
+    private Color buttonColorBLUE = Color.BLUE; // Color del botón
+    private Color buttonColorGRAY = Color.GRAY; // Color del botón
 
     public Home(UsuarioServicios usuarioServicios) {
         this.usuarioServicios = usuarioServicios;
@@ -29,6 +30,9 @@ public class Home extends JFrame {
         JButton btnRegister = new JButton("Registrar Usuario");
 
         // Action Listener para el botón de iniciar sesión
+        btnLogin.setBackground(buttonColorBLUE);
+        btnLogin.setForeground(Color.WHITE);
+        btnLogin.setFocusPainted(false);
         btnLogin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -41,6 +45,9 @@ public class Home extends JFrame {
         });
 
         // Action Listener para el botón de registrar usuario
+        btnRegister.setBackground(buttonColorGRAY);
+        btnRegister.setForeground(Color.WHITE);
+        btnRegister.setFocusPainted(false);
         btnRegister.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
