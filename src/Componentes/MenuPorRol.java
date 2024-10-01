@@ -3,6 +3,8 @@ package Componentes;
 import Servicios.EmpleadoServicios;
 import Servicios.DepartamentoServicios;
 import Modelo.Departamento;
+import Servicios.ReporteDesempenioServicios;
+
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +13,7 @@ public class MenuPorRol extends JFrame {
     private JTabbedPane tabbedPane;
     private EmpleadoServicios empleadoServicios;
     private DepartamentoServicios departamentoServicios;
+    private ReporteDesempenioServicios reporteServicios;
 
     public MenuPorRol(String rol) {
         setTitle("Sistema de Gestión");
@@ -22,12 +25,14 @@ public class MenuPorRol extends JFrame {
 
         // Inicializar servicios
         departamentoServicios = new DepartamentoServicios();
-        departamentoServicios.inicializarDatos();
         empleadoServicios = new EmpleadoServicios(departamentoServicios.getDepartamentos());
+        reporteServicios = new ReporteDesempenioServicios(departamentoServicios, empleadoServicios);
+        Departamento prueba = new Departamento(2, "prueba", "Recursos", "Piso 2", "123-456-7890");
+        departamentoServicios.registrarDepartamento(prueba);
+        departamentoServicios.inicializarDatos();
+        empleadoServicios.inicializarDatos(prueba);
+        reporteServicios.inicializarDatos();
 
-        Departamento rrhh = new Departamento(2, "rrhh", "Recursos", "Piso 2", "123-456-7890");
-        departamentoServicios.registrarDepartamento(rrhh);
-        empleadoServicios.inicializarDatos(rrhh);
 
         if (rol.equals("Administrador")) {
             mostrarMenuAdministrador();
@@ -42,8 +47,7 @@ public class MenuPorRol extends JFrame {
     private void mostrarMenuAdministrador() {
         tabbedPane.addTab("Gestionar Empleados", new GestionarEmpleados(empleadoServicios));
         tabbedPane.addTab("Gestionar Departamentos", new GestionarDepartamentos(departamentoServicios));
-        tabbedPane.addTab("Gestionar Métricas", new GestionarReportes());
-        tabbedPane.addTab("Generar Informes", new GenerarInformes());
+        tabbedPane.addTab("Gestionar Reportes", new GestionarReportes(reporteServicios));
     }
 
     private void mostrarMenuEmpleado() {

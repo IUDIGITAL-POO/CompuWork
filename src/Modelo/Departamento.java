@@ -87,4 +87,9 @@ public class Departamento {
             }
         }
     }
+
+    @Override
+    public String toString() {
+        return nombre;
+    }
 }
