@@ -1,104 +1,96 @@
 package Modelo;
 
-import java.util.Date;
-import java.util.List;
-import java.util.ArrayList;
+import Modelo.Departamento;
+import Modelo.Empleado;
+
+import java.time.LocalDate;
+import java.util.Map;
 
 public class ReporteDesempenio {
-    private int idReporte;
     private Empleado empleado;
     private Departamento departamento;
-    private Date fechaReporte;
-    private int metricas;
+    private LocalDate fechaInicio;
+    private LocalDate fechaFin;
+    private Map<String, Double> metricas;
+    private double puntuacionTotal;
+    private String comentarios;
 
-    public ReporteDesempenio(int idReporte, Empleado empleado, Departamento departamento, Date fechaReporte, int metricas) {
-        this.idReporte = idReporte;
+    // Constructor para reporte individual
+    public ReporteDesempenio(Empleado empleado, LocalDate fechaInicio, LocalDate fechaFin) {
         this.empleado = empleado;
-        this.departamento = departamento;
-        this.fechaReporte = fechaReporte;
-        this.metricas = metricas;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
     }
+
+    // Constructor para reporte departamental
+    public ReporteDesempenio(Departamento departamento, LocalDate fechaInicio, LocalDate fechaFin) {
+        this.departamento = departamento;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
+    }
+
+    // Getters y setters
 
     public Empleado getEmpleado() {
         return empleado;
-    }
-
-    public void setEmpleado(Empleado empleado) {
-        this.empleado = empleado;
     }
 
     public Departamento getDepartamento() {
         return departamento;
     }
 
-    public void setDepartamento(Departamento departamento) {
-        this.departamento = departamento;
+    public LocalDate getFechaInicio() {
+        return fechaInicio;
     }
 
-    public Date getFechaReporte() {
-        return fechaReporte;
+    public LocalDate getFechaFin() {
+        return fechaFin;
     }
 
-    public void setFechaReporte(Date fechaReporte) {
-        this.fechaReporte = fechaReporte;
-    }
-
-    public int getMetricas() {
+    public Map<String, Double> getMetricas() {
         return metricas;
     }
 
-    public void setMetricas(int metricas) {
+    public void setMetricas(Map<String, Double> metricas) {
         this.metricas = metricas;
     }
 
-
-    public double calcularPromedioMetrica(List<ReporteDesempenio> reportes) {
-            double suma = 0;
-            for (ReporteDesempenio reporte : reportes) {
-                suma += reporte.getMetricas();
-            }
-            return suma / reportes.size();
+    public double getPuntuacionTotal() {
+        return puntuacionTotal;
     }
 
-    public int contarEmpleados(List<ReporteDesempenio> reportes) {
-            int count = 0;
-
-            List<Empleado> empleadosContados = new ArrayList<>();
-
-            for (ReporteDesempenio reporte : reportes) {
-                Empleado empleadoActual = reporte.getEmpleado();
-                if (!empleadosContados.contains(empleadoActual)) {
-                    empleadosContados.add(empleadoActual);
-                    count++;
-                }
-            }
-            return count;
+    public void setPuntuacionTotal(double puntuacionTotal) {
+        this.puntuacionTotal = puntuacionTotal;
     }
 
-    public void imprimirReporteDepartamento(List<ReporteDesempenio> reportes) {
-            if (reportes.isEmpty()) {
-                System.out.println("No hay reportes disponibles.");
-                return;
-            }
-
-            String nombreDepartamento = reportes.get(0).getDepartamento().getNombre();
-            System.out.println("Reporte Departamento: " + nombreDepartamento);
-            System.out.println("Número de empleados: " + contarEmpleados(reportes));
-            System.out.println("Promedio de la métrica: " + calcularPromedioMetrica(reportes));
-
-    }
-    public void imprimirReporteEmpleado(List<ReporteDesempenio> reportes, Empleado empleadoSolicitado) {
-            for (ReporteDesempenio reporte : reportes) {
-                if (reporte.getEmpleado().equals(empleadoSolicitado)) {
-                    System.out.println("Reporte de Desempeño");
-                    System.out.println("Empleado: " + reporte.getEmpleado().getNombre());
-                    System.out.println("Departamento: " + reporte.getDepartamento().getNombre());
-                    System.out.println("Fecha del Reporte: " + reporte.getFechaReporte());
-                    System.out.println("Metricas: " + reporte.getMetricas());
-                    return;
-                }
-            }
-            System.out.println("No se encontró ningún reporte para el empleado: " + empleadoSolicitado.getNombre());
+    public String getComentarios() {
+        return comentarios;
     }
 
+    public void setComentarios(String comentarios) {
+        this.comentarios = comentarios;
+    }
+
+    // Método para agregar una métrica
+    public void agregarMetrica(String nombreMetrica, Double valor) {
+        this.metricas.put(nombreMetrica, valor);
+    }
+
+    // Método para calcular la puntuación total (puedes personalizar este cálculo)
+    public void calcularPuntuacionTotal() {
+        this.puntuacionTotal = this.metricas.values().stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+    }
+
+    @Override
+    public String toString() {
+        String tipoReporte = (empleado != null) ? "Individual" : "Departamental";
+        String entidad = (empleado != null) ? empleado.getNombre() : departamento.getNombre();
+
+        return "Reporte de Desempeño " + tipoReporte + ":\n" +
+                "Entidad: " + entidad + "\n" +
+                "Período: " + fechaInicio + " - " + fechaFin + "\n" +
+                "Métricas: " + metricas + "\n" +
+                "Puntuación Total: " + puntuacionTotal + "\n" +
+                "Comentarios: " + comentarios;
+    }
 }

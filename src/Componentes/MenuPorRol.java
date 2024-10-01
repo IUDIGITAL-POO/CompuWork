@@ -3,6 +3,8 @@ package Componentes;
 import Servicios.EmpleadoServicios;
 import Servicios.DepartamentoServicios;
 import Modelo.Departamento;
+import Servicios.ReporteDesempenioServicios;
+
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +13,7 @@ public class MenuPorRol extends JFrame {
     private JTabbedPane tabbedPane;
     private EmpleadoServicios empleadoServicios;
     private DepartamentoServicios departamentoServicios;
+    private ReporteDesempenioServicios reporteServicios;
 
     public MenuPorRol(String rol) {
         setTitle("Sistema de Gestión");
@@ -24,7 +27,7 @@ public class MenuPorRol extends JFrame {
         departamentoServicios = new DepartamentoServicios();
         departamentoServicios.inicializarDatos();
         empleadoServicios = new EmpleadoServicios(departamentoServicios.getDepartamentos());
-
+        reporteServicios = new ReporteDesempenioServicios(departamentoServicios, empleadoServicios);
         Departamento rrhh = new Departamento(2, "rrhh", "Recursos", "Piso 2", "123-456-7890");
         departamentoServicios.registrarDepartamento(rrhh);
         empleadoServicios.inicializarDatos(rrhh);
@@ -42,7 +45,7 @@ public class MenuPorRol extends JFrame {
     private void mostrarMenuAdministrador() {
         tabbedPane.addTab("Gestionar Empleados", new GestionarEmpleados(empleadoServicios));
         tabbedPane.addTab("Gestionar Departamentos", new GestionarDepartamentos(departamentoServicios));
-        tabbedPane.addTab("Gestionar Métricas", new GestionarReportes());
+        tabbedPane.addTab("Gestionar Métricas", new GestionarReportes(reporteServicios));
         tabbedPane.addTab("Generar Informes", new GenerarInformes());
     }
 

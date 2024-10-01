@@ -79,6 +79,11 @@ public class Empleado {
         System.out.println("Empleado con ID: " + id + " ha sido eliminado.");
         this.departamento = null;  // Elimina la referencia del departamento si es necesario
     }
+
+    @Override
+    public String toString() {
+        return "Empleado: " + nombre + " (ID: " + id + ")";
+    }
 }
 
 
