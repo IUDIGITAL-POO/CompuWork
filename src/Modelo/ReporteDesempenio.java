@@ -15,21 +15,25 @@ public class ReporteDesempenio {
     private double puntuacionTotal;
     private String comentarios;
 
-    // Constructor para reporte individual
     public ReporteDesempenio(Empleado empleado, LocalDate fechaInicio, LocalDate fechaFin) {
+        if (empleado == null) {
+            throw new IllegalArgumentException("Empleado cannot be null for individual report");
+        }
         this.empleado = empleado;
+        this.departamento = null;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
     }
 
-    // Constructor para reporte departamental
     public ReporteDesempenio(Departamento departamento, LocalDate fechaInicio, LocalDate fechaFin) {
+        if (departamento == null) {
+            throw new IllegalArgumentException("Departamento cannot be null for departmental report");
+        }
         this.departamento = departamento;
+        this.empleado = null;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
     }
-
-    // Getters y setters
 
     public Empleado getEmpleado() {
         return empleado;
@@ -71,12 +75,10 @@ public class ReporteDesempenio {
         this.comentarios = comentarios;
     }
 
-    // Método para agregar una métrica
     public void agregarMetrica(String nombreMetrica, Double valor) {
         this.metricas.put(nombreMetrica, valor);
     }
 
-    // Método para calcular la puntuación total (puedes personalizar este cálculo)
     public void calcularPuntuacionTotal() {
         this.puntuacionTotal = this.metricas.values().stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
     }
@@ -84,8 +86,7 @@ public class ReporteDesempenio {
     @Override
     public String toString() {
         String tipoReporte = (empleado != null) ? "Individual" : "Departamental";
-        String entidad = (empleado != null) ? empleado.getNombre() : departamento.getNombre();
-
+        String entidad = (empleado != null) ? empleado.getNombre() : (departamento != null ? departamento.getNombre() : "Desconocido");
         return "Reporte de Desempeño " + tipoReporte + ":\n" +
                 "Entidad: " + entidad + "\n" +
                 "Período: " + fechaInicio + " - " + fechaFin + "\n" +

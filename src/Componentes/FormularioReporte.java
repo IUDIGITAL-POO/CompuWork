@@ -36,13 +36,11 @@ public class FormularioReporte extends JDialog {
     public FormularioReporte(JFrame parent, ReporteDesempenioServicios servicioReporte) {
         super(parent, "Formulario de Reporte", true);
         this.servicioReporte = servicioReporte;
-        this.departamentoServicios = servicioReporte.getDepartamentoServicios();
-        this.empleadoServicios = servicioReporte.getEmpleadoServicios();
+        this.departamentoServicios = ReporteDesempenioServicios.getDepartamentoServicios();
+        this.empleadoServicios = ReporteDesempenioServicios.getEmpleadoServicios();
 
         initComponents();
     }
-
-
 
     private void initComponents() {
         setLayout(new GridBagLayout());

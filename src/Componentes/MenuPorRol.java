@@ -25,12 +25,14 @@ public class MenuPorRol extends JFrame {
 
         // Inicializar servicios
         departamentoServicios = new DepartamentoServicios();
-        departamentoServicios.inicializarDatos();
         empleadoServicios = new EmpleadoServicios(departamentoServicios.getDepartamentos());
         reporteServicios = new ReporteDesempenioServicios(departamentoServicios, empleadoServicios);
-        Departamento rrhh = new Departamento(2, "rrhh", "Recursos", "Piso 2", "123-456-7890");
-        departamentoServicios.registrarDepartamento(rrhh);
-        empleadoServicios.inicializarDatos(rrhh);
+        Departamento prueba = new Departamento(2, "prueba", "Recursos", "Piso 2", "123-456-7890");
+        departamentoServicios.registrarDepartamento(prueba);
+        departamentoServicios.inicializarDatos();
+        empleadoServicios.inicializarDatos(prueba);
+        reporteServicios.inicializarDatos();
+
 
         if (rol.equals("Administrador")) {
             mostrarMenuAdministrador();
@@ -45,8 +47,7 @@ public class MenuPorRol extends JFrame {
     private void mostrarMenuAdministrador() {
         tabbedPane.addTab("Gestionar Empleados", new GestionarEmpleados(empleadoServicios));
         tabbedPane.addTab("Gestionar Departamentos", new GestionarDepartamentos(departamentoServicios));
-        tabbedPane.addTab("Gestionar Métricas", new GestionarReportes(reporteServicios));
-        tabbedPane.addTab("Generar Informes", new GenerarInformes());
+        tabbedPane.addTab("Gestionar Reportes", new GestionarReportes(reporteServicios));
     }
 
     private void mostrarMenuEmpleado() {

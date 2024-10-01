@@ -4,24 +4,71 @@ import Modelo.ReporteDesempenio;
 import Modelo.ReporteDesempenio;
 import Servicios.ReporteDesempenioServicios;
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.util.List;
 
 public class GestionarReportes extends JPanel {
     private ReporteDesempenioServicios servicioReporte;
-    private JList<ReporteDesempenio> listaReportes;
-    private DefaultListModel<ReporteDesempenio> modeloLista;
+    private JList<ReporteDesempenio> listaReportesIndividuales;
+    private DefaultListModel<ReporteDesempenio> modeloListaIndividuales;
+    private JList<ReporteDesempenio> listaReportesDepartamentales;
+    private DefaultListModel<ReporteDesempenio> modeloListaDepartamentales;
+
 
     public GestionarReportes(ReporteDesempenioServicios servicioReporte) {
         this.servicioReporte = servicioReporte;
         setLayout(new BorderLayout());
 
-        modeloLista = new DefaultListModel<>();
-        listaReportes = new JList<>(modeloLista);
-        listaReportes.setCellRenderer(new ReporteListCellRenderer());
+        modeloListaIndividuales = new DefaultListModel<>();
+        listaReportesIndividuales = new JList<>(modeloListaIndividuales);
+        listaReportesIndividuales.setCellRenderer(new ReporteListCellRenderer());
 
-        JScrollPane scrollPane = new JScrollPane(listaReportes);
-        add(scrollPane, BorderLayout.CENTER);
+
+        modeloListaDepartamentales = new DefaultListModel<>();
+        listaReportesDepartamentales = new JList<>(modeloListaDepartamentales);
+        listaReportesDepartamentales.setCellRenderer(new ReporteListCellRenderer());
+
+        JPanel panelListas = new JPanel();
+        panelListas.setLayout(new GridLayout(1, 2));
+
+        JPanel panelIndividuales = new JPanel();
+        panelIndividuales.setLayout(new BorderLayout());
+        panelIndividuales.add(new JScrollPane(listaReportesIndividuales), BorderLayout.CENTER);
+        panelIndividuales.setBorder(BorderFactory.createTitledBorder("Reportes Individuales"));
+
+        JPanel panelDepartamentales = new JPanel();
+        panelDepartamentales.setLayout(new BorderLayout());
+        panelDepartamentales.add(new JScrollPane(listaReportesDepartamentales), BorderLayout.CENTER);
+        panelDepartamentales.setBorder(BorderFactory.createTitledBorder("Reportes Departamentales"));
+
+        panelListas.add(panelIndividuales);
+        panelListas.add(panelDepartamentales);
+
+        listaReportesIndividuales.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        listaReportesDepartamentales.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        listaReportesIndividuales.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    listaReportesDepartamentales.clearSelection();
+                }
+            }
+        });
+
+
+        listaReportesDepartamentales.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    listaReportesIndividuales.clearSelection();
+                }
+            }
+        });
+
+        add(panelListas, BorderLayout.CENTER);
 
         JPanel panelBotones = new JPanel();
         JButton btnAgregar = new JButton("Crear Reporte");
@@ -45,33 +92,49 @@ public class GestionarReportes extends JPanel {
     }
 
     private void cargarReportes() {
-        modeloLista.clear();
+        modeloListaIndividuales.clear();
+        modeloListaDepartamentales.clear();
         List<ReporteDesempenio> reportes = servicioReporte.obtenerTodosLosReportes();
         for (ReporteDesempenio reporte : reportes) {
-            modeloLista.addElement(reporte);
+            if (reporte.getEmpleado() != null) {
+                modeloListaIndividuales.addElement(reporte);
+            } else {
+                modeloListaDepartamentales.addElement(reporte);
+            }
         }
     }
 
     private void mostrarFormularioCrear() {
         FormularioReporte formulario = new FormularioReporte((JFrame) SwingUtilities.getWindowAncestor(this), servicioReporte);
         formulario.setVisible(true);
-        cargarReportes(); // Actualizar la lista después de crear
+        cargarReportes();
     }
 
     private void actualizarReporteSeleccionado() {
-        ReporteDesempenio reporteSeleccionado = listaReportes.getSelectedValue();
+        ReporteDesempenio reporteSeleccionado = null;
+        if (listaReportesIndividuales.getSelectedValue() != null) {
+            reporteSeleccionado = listaReportesIndividuales.getSelectedValue();
+        } else if (listaReportesDepartamentales.getSelectedValue() != null) {
+            reporteSeleccionado = listaReportesDepartamentales.getSelectedValue();
+        }
         if (reporteSeleccionado != null) {
             FormularioReporte formulario = new FormularioReporte((JFrame) SwingUtilities.getWindowAncestor(this), servicioReporte);
             formulario.setReporteEditar(reporteSeleccionado);
             formulario.setVisible(true);
-            cargarReportes(); // Actualizar la lista después de editar
+            cargarReportes();
         } else {
             JOptionPane.showMessageDialog(this, "Por favor, seleccione un reporte para actualizar.");
         }
     }
 
+
     private void eliminarReporteSeleccionado() {
-        ReporteDesempenio reporteSeleccionado = listaReportes.getSelectedValue();
+        ReporteDesempenio reporteSeleccionado = null;
+        if (listaReportesIndividuales.getSelectedValue() != null) {
+            reporteSeleccionado = listaReportesIndividuales.getSelectedValue();
+        } else if (listaReportesDepartamentales.getSelectedValue() != null) {
+            reporteSeleccionado = listaReportesDepartamentales.getSelectedValue();
+        }
         if (reporteSeleccionado != null) {
             int confirmacion = JOptionPane.showConfirmDialog(this,
                     "¿Está seguro de que desea eliminar este reporte?",
@@ -86,8 +149,14 @@ public class GestionarReportes extends JPanel {
         }
     }
 
+
     private void verReporteSeleccionado() {
-        ReporteDesempenio reporteSeleccionado = listaReportes.getSelectedValue();
+        ReporteDesempenio reporteSeleccionado = null;
+        if (listaReportesIndividuales.getSelectedValue() != null) {
+            reporteSeleccionado = listaReportesIndividuales.getSelectedValue();
+        } else if (listaReportesDepartamentales.getSelectedValue() != null) {
+            reporteSeleccionado = listaReportesDepartamentales.getSelectedValue();
+        }
         if (reporteSeleccionado != null) {
             String reporteString = reporteSeleccionado.toString();
             JTextArea textArea = new JTextArea(reporteString);
@@ -101,15 +170,20 @@ public class GestionarReportes extends JPanel {
     }
 
     // Clase interna para renderizar los elementos de la lista
-    private class ReporteListCellRenderer extends DefaultListCellRenderer {
+    private static class ReporteListCellRenderer extends DefaultListCellRenderer {
         @Override
         public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-            if (value instanceof ReporteDesempenio) {
-                ReporteDesempenio reporte = (ReporteDesempenio) value;
-                String tipoReporte = (reporte.getEmpleado() != null) ? "Individual" : "Departamental";
-                String entidad = (reporte.getEmpleado() != null) ? reporte.getEmpleado().getNombre() : reporte.getDepartamento().getNombre();
-                setText(tipoReporte + " - " + entidad + " - " + reporte.getFechaInicio() + " a " + reporte.getFechaFin());
+            if (value instanceof ReporteDesempenio reporte) {
+                String entidad;
+                if (reporte.getEmpleado() != null) {
+                    entidad = reporte.getEmpleado().getNombre();
+                } else if (reporte.getDepartamento() != null) {
+                    entidad = reporte.getDepartamento().getNombre();
+                } else {
+                    entidad = "Sin asignar";
+                }
+                setText(entidad + " - " + reporte.getFechaInicio() + " a " + reporte.getFechaFin());
             }
             return c;
         }
