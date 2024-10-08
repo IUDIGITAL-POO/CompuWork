@@ -1,4 +1,4 @@
-package IUDIGITAL;
+package Modelo;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,5 +86,10 @@ public class Departamento {
                 System.out.println("- " + empleado.getNombre());
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return nombre;
     }
 }

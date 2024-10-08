@@ -1,4 +1,4 @@
-package IUDIGITAL;
+package Modelo;
 
 public class EmpleadoTemporal extends Empleado{
     private String fechaInicio;

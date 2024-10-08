@@ -1,4 +1,4 @@
-package IUDIGITAL;
+package Modelo;
 
 public class EmpleadoPermanente extends Empleado{
 
