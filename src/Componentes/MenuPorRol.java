@@ -4,8 +4,11 @@ import Servicios.EmpleadoServicios;
 import Servicios.DepartamentoServicios;
 import Modelo.Departamento;
 import Servicios.ReporteDesempenioServicios;
+import Servicios.UsuarioServicios;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +17,7 @@ public class MenuPorRol extends JFrame {
     private EmpleadoServicios empleadoServicios;
     private DepartamentoServicios departamentoServicios;
     private ReporteDesempenioServicios reporteServicios;
+    private UsuarioServicios usuarioServicios;
 
     public MenuPorRol(String rol) {
         setTitle("Sistema de Gestión");
@@ -32,14 +36,14 @@ public class MenuPorRol extends JFrame {
         departamentoServicios.inicializarDatos();
         empleadoServicios.inicializarDatos(prueba);
         reporteServicios.inicializarDatos();
-
+        usuarioServicios = new UsuarioServicios();
 
         if (rol.equals("Administrador")) {
             mostrarMenuAdministrador();
         } else if (rol.equals("Empleado")) {
             mostrarMenuEmpleado();
         }
-
+        agregarCerrarSesion();
         add(tabbedPane);
         setVisible(true);
     }
@@ -57,6 +61,31 @@ public class MenuPorRol extends JFrame {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             new MenuPorRol("Administrador");
+        });
+    }
+
+    private void agregarCerrarSesion() {
+        JPanel cerrarSesionPanel = new JPanel();
+
+        tabbedPane.addTab("", cerrarSesionPanel);
+        tabbedPane.setTabComponentAt(tabbedPane.getTabCount() - 1, new JLabel("Cerrar Sesión"));
+        tabbedPane.addChangeListener(e -> {
+            if (tabbedPane.getSelectedComponent() == cerrarSesionPanel) {
+                int respuesta = JOptionPane.showConfirmDialog(
+                        this,
+                        "¿Está seguro que desea cerrar sesión?",
+                        "Confirmar Cierre de Sesión",
+                        JOptionPane.YES_NO_OPTION
+                );
+
+                if (respuesta == JOptionPane.YES_OPTION) {
+                    dispose();
+
+                    new Home(usuarioServicios).setVisible(true);
+                } else {
+                    tabbedPane.setSelectedIndex(0);
+                }
+            }
         });
     }
 }

@@ -1,2 +1,4 @@
 Mariana,05102020,Administrador
 Alejandro,181920,Administrador
+test,test123,Administrador
+testU,test123,Empleado
