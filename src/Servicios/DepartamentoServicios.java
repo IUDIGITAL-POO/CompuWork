@@ -18,11 +18,10 @@ public class DepartamentoServicios {
         departamentos.add(departamento);
     }
 
-
     public static void actualizarDepartamento(Departamento departamentoActualizado) {
         // Buscar el departamento existente por nombre y actualizarlo
         for (int i = 0; i < departamentos.size(); i++) {
-            if (departamentos.get(i).getCodigo() == departamentoActualizado.getCodigo()) {
+            if (Integer.parseInt(new String(String.valueOf(departamentos.get(i).getCodigo()))) == departamentoActualizado.getCodigo()) {
                 departamentos.set(i, departamentoActualizado);
                 break;
             }
@@ -30,12 +29,12 @@ public class DepartamentoServicios {
     }
 
     public static void eliminarDepartamento(int codigo) {
-        departamentos.removeIf(dep -> dep.getCodigo() == codigo);
+        departamentos.removeIf(dep -> Integer.parseInt(new String(String.valueOf(dep.getCodigo()))) == codigo);
     }
 
     public Departamento buscarDepartamentoPorCodigo(int codigo) {
         for (Departamento dep : departamentos) {
-            if (dep.getCodigo() == codigo) {
+            if (Integer.parseInt(new String(String.valueOf(dep.getCodigo()))) == codigo) {
                 return dep;
             }
         }

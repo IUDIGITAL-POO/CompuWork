@@ -1,35 +1,33 @@
 package Modelo;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Departamento {
-
-    private int codigo;
+    private int id;
     private String nombre;
-    private String tipo;
+    private String descripcion;
     private String ubicacion;
-    private String telefono;
-    private List<Empleado> empleados;
+    private String jefe;
+    private int codigo; // Asegúrate de tener este campo
+    private String tipo; // Asegúrate de tener este campo
+    private String telefono; // Asegúrate de tener este campo
 
     // Constructor
-    public Departamento(int codigo, String nombre, String tipo, String ubicacion, String telefono) {
-        this.codigo = codigo;
+    public Departamento(int id, String nombre, String descripcion, String ubicacion, String jefe) {
+        this.id = id;
         this.nombre = nombre;
-        this.tipo = tipo;
+        this.descripcion = descripcion;
         this.ubicacion = ubicacion;
-        this.telefono = telefono;
-        this.empleados = new ArrayList<>();
+        this.jefe = jefe;
     }
 
-    public int getCodigo() {
-        return codigo;
+    // Getters y Setters
+    public int getId() {
+        return id;
     }
 
-    public void setCodigo(int codigo) {
-        this.codigo = codigo;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    // Getter y Setter para nombre
     public String getNombre() {
         return nombre;
     }
@@ -38,16 +36,14 @@ public class Departamento {
         this.nombre = nombre;
     }
 
-    // Getter y Setter para tipo
-    public String getTipo() {
-        return tipo;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
-    // Getter y Setter para ubicacion
     public String getUbicacion() {
         return ubicacion;
     }
@@ -56,40 +52,39 @@ public class Departamento {
         this.ubicacion = ubicacion;
     }
 
-    // Getter y Setter para telefono
+    public String getJefe() {
+        return jefe;
+    }
+
+    public void setJefe(String jefe) {
+        this.jefe = jefe;
+    }
+
+    // Métodos adicionales
+    public int getCodigo() {
+        return codigo;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
     public String getTelefono() {
         return telefono;
     }
 
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
-    }
-
-    public void agregarEmpleado(Empleado empleado) {
-        empleados.add(empleado);
-    }
-
-    public void eliminarEmpleado(Empleado empleado) {
-        empleados.remove(empleado);
-    }
-
-    public List<Empleado> getEmpleados() {
-        return empleados;
-    }
-
-    public void visualizarEmpleados() {
-        System.out.println("Empleados del departamento " + nombre + ":");
-        if (empleados.isEmpty()) {
-            System.out.println("No hay empleados en este departamento.");
-        } else {
-            for (Empleado empleado : empleados) {
-                System.out.println("- " + empleado.getNombre());
-            }
-        }
-    }
-
+    // Método toString
     @Override
     public String toString() {
-        return nombre;
+        return "Departamento{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", descripcion='" + descripcion + '\'' +
+                ", ubicacion='" + ubicacion + '\'' +
+                ", jefe='" + jefe + '\'' +
+                ", codigo=" + codigo +
+                ", tipo='" + tipo + '\'' +
+                ", telefono='" + telefono + '\'' +
+                '}';
     }
 }

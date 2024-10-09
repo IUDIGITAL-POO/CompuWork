@@ -18,27 +18,27 @@ public class DepartamentoServiciosPruebas {
 
     @Test
     public void testAgregarDepartamento() {
-        Departamento departamento = new Departamento(1, "Finanzas");
-        departamentoServicios.agregarDepartamento(departamento);
-        List<Departamento> departamentos = departamentoServicios.obtenerDepartamentos();
+        Departamento departamento = new Departamento(1, "Finanzas", "Descripción Finanzas", "Ubicación Finanzas", "Jefe Finanzas");
+        departamentoServicios.registrarDepartamento(departamento);
+        List<Departamento> departamentos = departamentoServicios.getDepartamentos();
         assertTrue(departamentos.contains(departamento));
     }
 
     @Test
     public void testObtenerDepartamentos() {
-        Departamento departamento1 = new Departamento(1, "Finanzas");
-        Departamento departamento2 = new Departamento(2, "Recursos Humanos");
-        departamentoServicios.agregarDepartamento(departamento1);
-        departamentoServicios.agregarDepartamento(departamento2);
-        List<Departamento> departamentos = departamentoServicios.obtenerDepartamentos();
+        Departamento departamento1 = new Departamento(1, "Finanzas", "Descripción Finanzas", "Ubicación Finanzas", "Jefe Finanzas");
+        Departamento departamento2 = new Departamento(2, "Recursos Humanos", "Descripción RRHH", "Ubicación RRHH", "Jefe RRHH");
+        departamentoServicios.registrarDepartamento(departamento1);
+        departamentoServicios.registrarDepartamento(departamento2);
+        List<Departamento> departamentos = departamentoServicios.getDepartamentos();
         assertEquals(2, departamentos.size());
     }
 
     @Test
     public void testBuscarDepartamentoPorId() {
-        Departamento departamento = new Departamento(1, "Finanzas");
-        departamentoServicios.agregarDepartamento(departamento);
-        Departamento encontrado = departamentoServicios.buscarDepartamentoPorId(1);
+        Departamento departamento = new Departamento(1, "Finanzas", "Descripción Finanzas", "Ubicación Finanzas", "Jefe Finanzas");
+        departamentoServicios.registrarDepartamento(departamento);
+        Departamento encontrado = departamentoServicios.buscarDepartamentoPorCodigo(1);
         assertNotNull(encontrado);
         assertEquals("Finanzas", encontrado.getNombre());
     }
