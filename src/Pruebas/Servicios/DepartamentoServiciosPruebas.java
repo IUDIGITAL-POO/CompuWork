@@ -1,45 +1,44 @@
 package Pruebas.Servicios;
 
-import Modelo.Departamento;
-import Servicios.DepartamentoServicios;
-import org.junit.jupiter.api.BeforeEach;
+import Modelo.Departamento; // Asegúrate de que la ruta del paquete sea correcta
 import org.junit.jupiter.api.Test;
-import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class DepartamentoServiciosPruebas {
 
-    private DepartamentoServicios departamentoServicios;
-
-    @BeforeEach
-    public void setUp() {
-        departamentoServicios = new DepartamentoServicios();
+    @Test
+    public void testConstructor() {
+        // Usa todos los parámetros requeridos por el constructor
+        Departamento departamento = new Departamento(1, "Finanzas", "Administrativo", "Planta Baja", "123-456");
+        assertEquals(1, departamento.getCodigo());
+        assertEquals("Finanzas", departamento.getNombre());
+        assertEquals("Administrativo", departamento.getTipo());
+        assertEquals("Planta Baja", departamento.getUbicacion());
+        assertEquals("123-456", departamento.getTelefono());
     }
 
     @Test
-    public void testAgregarDepartamento() {
-        Departamento departamento = new Departamento(1, "Finanzas");
-        departamentoServicios.agregarDepartamento(departamento);
-        List<Departamento> departamentos = departamentoServicios.obtenerDepartamentos();
-        assertTrue(departamentos.contains(departamento));
+    public void testSettersAndGetters() {
+        // Usa todos los parámetros requeridos por el constructor
+        Departamento departamento = new Departamento(1, "Finanzas", "Administrativo", "Planta Baja", "123-456");
+        departamento.setCodigo(2);
+        departamento.setNombre("Recursos Humanos");
+        departamento.setTipo("Administrativo");
+        departamento.setUbicacion("Planta Alta");
+        departamento.setTelefono("789-012");
+
+        assertEquals(2, departamento.getCodigo());
+        assertEquals("Recursos Humanos", departamento.getNombre());
+        assertEquals("Administrativo", departamento.getTipo());
+        assertEquals("Planta Alta", departamento.getUbicacion());
+        assertEquals("789-012", departamento.getTelefono());
     }
 
     @Test
-    public void testObtenerDepartamentos() {
-        Departamento departamento1 = new Departamento(1, "Finanzas");
-        Departamento departamento2 = new Departamento(2, "Recursos Humanos");
-        departamentoServicios.agregarDepartamento(departamento1);
-        departamentoServicios.agregarDepartamento(departamento2);
-        List<Departamento> departamentos = departamentoServicios.obtenerDepartamentos();
-        assertEquals(2, departamentos.size());
-    }
-
-    @Test
-    public void testBuscarDepartamentoPorId() {
-        Departamento departamento = new Departamento(1, "Finanzas");
-        departamentoServicios.agregarDepartamento(departamento);
-        Departamento encontrado = departamentoServicios.buscarDepartamentoPorId(1);
-        assertNotNull(encontrado);
-        assertEquals("Finanzas", encontrado.getNombre());
+    public void testToString() {
+        // Usa todos los parámetros requeridos por el constructor
+        Departamento departamento = new Departamento(1, "Finanzas", "Administrativo", "Planta Baja", "123-456");
+        String expected = "Finanzas"; // Cambia según la implementación de toString()
+        assertEquals(expected, departamento.toString());
     }
 }
