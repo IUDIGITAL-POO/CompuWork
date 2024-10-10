@@ -1,8 +1,6 @@
 package Pruebas.Servicios;
 
-import Modelo.Departamento;
-import Servicios.DepartamentoServicios;
-import org.junit.jupiter.api.BeforeEach;
+import Modelo.Departamento; // Asegúrate de que la ruta del paquete sea correcta
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
